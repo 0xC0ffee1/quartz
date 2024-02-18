@@ -1,0 +1,6 @@
+rootProject.name = 'quartz'
+include 'quartz-core'
+include 'quartz-db'
+include 'quartz-test'
+include 'quartz-bukkit'
+

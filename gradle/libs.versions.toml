@@ -1,0 +1,4 @@
+[libraries]
+paper = "io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT"
+guice = "com.google.inject:guice:7.0.0"
+reflections = "org.reflections:reflections:0.10.2"

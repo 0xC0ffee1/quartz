@@ -1,9 +1,26 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId = 'net.c0ffee1.quartz'
+            artifactId = 'quartz-bukkit'
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+
 group = 'net.c0ffee1'
-version = 'unspecified'
+version = '1.0-SNAPSHOT'
 var minecraftVersion = "1.20.4-R0.1-SNAPSHOT"
 repositories {
     mavenCentral()

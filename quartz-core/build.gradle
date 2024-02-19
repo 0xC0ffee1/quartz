@@ -1,6 +1,23 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId = 'net.c0ffee1.quartz'
+            artifactId = 'quartz-core'
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
 
 group = 'net.c0ffee1'
 version = '1.0-SNAPSHOT'

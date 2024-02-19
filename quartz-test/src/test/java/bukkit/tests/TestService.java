@@ -14,7 +14,8 @@ public class TestService {
 
     @PostRegister
     public void onRegister(){
-        System.out.println("hello " + plugin.getName());
+        if(plugin == null) return;
+        plugin.setTestData("bukkit_inject", "ok");
+        plugin.setTestData("bukkit_service_discovery", "ok");
     }
-
 }

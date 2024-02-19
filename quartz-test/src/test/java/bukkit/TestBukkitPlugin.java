@@ -1,19 +1,25 @@
 package bukkit;
 
-import net.c0ffee1.quartz.core.Quartz;
-import net.c0ffee1.quartz.platforms.bukkit.BukkitPlatform;
 import net.c0ffee1.quartz.platforms.bukkit.QuartzBukkitPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
+
 public class TestBukkitPlugin extends JavaPlugin implements QuartzBukkitPlugin {
+    private HashMap<String, String> testData = new HashMap<>();
 
     @Override
     public void onEnable() {
-        ConfigurationBuilder builder = new ConfigurationBuilder().forPackage(getClass().getPackageName(), getClassLoader());
-        Quartz.init(new BukkitPlatform<>(builder, this, TestBukkitPlugin.class));
+        initQuartz(TestBukkitPlugin.class);
+    }
+
+    public void setTestData(String key, String value){
+        testData.put(key, value);
+    }
+    public String getTestData(String key){
+        return testData.get(key);
     }
 
     @Override

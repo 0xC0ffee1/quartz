@@ -38,6 +38,6 @@ public class BukkitPlatform<P extends QuartzBukkitPlugin> extends CommonPlatform
 
     @Override
     public Class<?> getEntryPoint() {
-        return app.getClass();
+        return pluginClass;
     }
 }

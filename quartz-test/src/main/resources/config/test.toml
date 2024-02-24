@@ -1,0 +1,10 @@
+testEnabled=false
+testString="hello world"
+
+[someData]
+a = 1
+b = 2
+c = 3
+
+[test]
+someKey = "123"

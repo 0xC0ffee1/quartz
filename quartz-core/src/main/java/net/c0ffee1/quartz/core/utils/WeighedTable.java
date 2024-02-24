@@ -1,7 +1,5 @@
 package net.c0ffee1.quartz.core.utils;
 
-import org.bukkit.entity.Player;
-
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -43,31 +41,6 @@ public class WeighedTable<T> {
 
     public String getRarity(T item){
         return rarityMap.get(item);
-    }
-
-    public T testChances(Player player, double times){
-        T currentItem = null;
-        HashMap<Double, Integer> timeMap = new HashMap<>();
-        for(int i = 0; i < times; i++){
-            double random = secureRandom.nextDouble() * totalWeight;
-            for(Map.Entry<T, Double> item : map.entrySet()){
-                double weight = item.getValue();
-                random -= weight;
-                if (random <= 0.0d) {
-                    currentItem = item.getKey();
-                    double chance = ((map.get(currentItem) / totalWeight) * 100) * weightMap.get(map.get(currentItem));
-                    timeMap.put(chance, timeMap.getOrDefault(chance, 0)+1);
-                    break;
-                }
-            }
-        }
-        player.sendMessage("--------------------------");
-        for(Double d : timeMap.keySet()){
-            player.sendMessage(d + ": " + ((timeMap.get(d) / times)*100));
-            player.sendMessage("--------");
-        }
-
-        return currentItem;
     }
 
     public T getNextItem(){

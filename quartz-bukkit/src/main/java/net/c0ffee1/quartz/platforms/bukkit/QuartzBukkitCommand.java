@@ -1,6 +1,7 @@
 package net.c0ffee1.quartz.platforms.bukkit;
 
 import com.google.inject.Inject;
+import net.c0ffee1.quartz.core.Quartz;
 import net.c0ffee1.quartz.core.annotations.PostRegister;
 import net.c0ffee1.quartz.core.commands.QuartzCommand;
 import org.bukkit.Bukkit;
@@ -49,6 +50,7 @@ public class QuartzBukkitCommand extends BukkitCommand implements QuartzCommand<
             Bukkit.getCommandMap().getKnownCommands().remove(alias);
         }
         removeCommand(getName());
+        bukkitPlugin.getLogger().info("registered " + getName());
 
         boolean registered = Bukkit.getCommandMap().register(getName(), bukkitPlugin.getName(), this);
     }

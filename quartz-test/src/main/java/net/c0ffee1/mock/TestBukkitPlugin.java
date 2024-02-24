@@ -1,10 +1,11 @@
-package bukkit;
+package net.c0ffee1.mock;
 
 import net.c0ffee1.quartz.platforms.bukkit.QuartzBukkitPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 
 public class TestBukkitPlugin extends JavaPlugin implements QuartzBukkitPlugin {
@@ -23,7 +24,12 @@ public class TestBukkitPlugin extends JavaPlugin implements QuartzBukkitPlugin {
     }
 
     @Override
-    public @NotNull Logger getSLF4JLogger() {
-        return super.getSLF4JLogger();
+    public Path getDataFolderPath() {
+        return Path.of("");
+    }
+
+    @Override
+    public Logger getSlf4jLogger() {
+        return getSLF4JLogger();
     }
 }

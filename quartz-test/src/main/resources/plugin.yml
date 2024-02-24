@@ -1,4 +1,4 @@
 name: TestPlugin
-main: bukkit.TestBukkitPlugin
+main: net.c0ffee1.mock.TestBukkitPlugin
 version: 1.0
 api-version: 1.14

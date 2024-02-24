@@ -1,8 +1,13 @@
 package net.c0ffee1.quartz.core;
 
-import org.jetbrains.annotations.NotNull;
+import net.c0ffee1.quartz.core.config.ConfigManager;
 import org.slf4j.Logger;
 
+import java.nio.file.Path;
+
 public interface QuartzApplication {
-    @NotNull Logger getSLF4JLogger();
+
+    Path getDataFolderPath();
+    ConfigManager createConfigManager();
+    Logger getSlf4jLogger();
 }

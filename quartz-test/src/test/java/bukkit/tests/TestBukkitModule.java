@@ -1,6 +1,6 @@
 package bukkit.tests;
 
-import net.c0ffee1.mock.BukkitTest;
+import net.c0ffee1.mock.bukkit.BukkitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

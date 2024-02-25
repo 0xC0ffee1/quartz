@@ -1,7 +1,6 @@
 package net.c0ffee1.quartz.core.platform;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Scopes;
 import com.google.inject.matcher.Matchers;
 import net.c0ffee1.quartz.core.QuartzApplication;
@@ -10,11 +9,8 @@ import net.c0ffee1.quartz.core.config.ConfigProvisionListener;
 import net.c0ffee1.quartz.core.config.QuartzConfigManager;
 import net.c0ffee1.quartz.core.platform.loaders.ConfigLoader;
 import net.c0ffee1.quartz.core.platform.loaders.ServiceLoader;
-import net.c0ffee1.quartz.core.service.PostRegisterTypeListener;
+import net.c0ffee1.quartz.core.service.PostRegisterProvisionListener;
 import org.reflections.Reflections;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 
 public abstract class CommonPlatformModule<P extends QuartzApplication> extends AbstractModule implements PlatformModule<P>{
@@ -41,7 +37,7 @@ public abstract class CommonPlatformModule<P extends QuartzApplication> extends 
         init();
         new ServiceLoader(reflections).load(this::registerService);
         new ConfigLoader(reflections).load(this::makeConfigSingleton);
-        bindListener(Matchers.any(), new PostRegisterTypeListener());
+        bindListener(Matchers.any(), new PostRegisterProvisionListener());
     }
 
     @Override

@@ -1,23 +1,24 @@
 package net.c0ffee1.quartz.core.service;
 
-import com.google.inject.spi.InjectionListener;
+import com.google.inject.spi.ProvisionListener;
 import net.c0ffee1.quartz.core.annotations.PostRegister;
-
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class PostInjectionEventListener <I> implements InjectionListener<I> {
+public class PostRegisterProvisionListener implements ProvisionListener {
     @Override
-    public void afterInjection(I injectee) {
-        for (Method method : injectee.getClass().getDeclaredMethods()) {
+    public <T> void onProvision(ProvisionInvocation<T> provision) {
+        T instance = provision.provision();
+        for (Method method : instance.getClass().getMethods()) {
             if (method.isAnnotationPresent(PostRegister.class)) {
                 method.setAccessible(true);
                 try {
-                    method.invoke(injectee);
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                    method.invoke(instance);
+                } catch (Exception e) {
                     throw new RuntimeException("Failed to execute @PostRegister method", e);
                 }
+                break;
             }
         }
     }

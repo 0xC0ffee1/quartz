@@ -1,4 +1,4 @@
-package net.c0ffee1.mock;
+package net.c0ffee1.mock.bukkit;
 
 import com.google.inject.Inject;
 import net.c0ffee1.quartz.core.annotations.PostRegister;

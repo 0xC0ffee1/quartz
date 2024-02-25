@@ -1,8 +1,7 @@
-package net.c0ffee1.mock;
+package net.c0ffee1.mock.bukkit;
 
 import net.c0ffee1.quartz.platforms.bukkit.QuartzBukkitPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;

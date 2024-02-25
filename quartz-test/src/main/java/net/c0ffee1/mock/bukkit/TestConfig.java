@@ -1,4 +1,4 @@
-package net.c0ffee1.mock;
+package net.c0ffee1.mock.bukkit;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.inject.Singleton;

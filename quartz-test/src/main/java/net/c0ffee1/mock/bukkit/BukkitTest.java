@@ -1,8 +1,7 @@
-package net.c0ffee1.mock;
+package net.c0ffee1.mock.bukkit;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
-import net.c0ffee1.mock.TestBukkitPlugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 

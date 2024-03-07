@@ -11,4 +11,6 @@ public interface ConfigManager {
     Object getConfig(Class<?> clazz);
 
     void writeToFile(Object config);
+
+    void registerListener(Object listener);
 }

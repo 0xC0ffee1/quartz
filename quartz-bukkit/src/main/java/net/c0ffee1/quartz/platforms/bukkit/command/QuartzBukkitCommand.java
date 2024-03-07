@@ -1,4 +1,4 @@
-package net.c0ffee1.quartz.platforms.bukkit;
+package net.c0ffee1.quartz.platforms.bukkit.command;
 
 import com.google.inject.Inject;
 import net.c0ffee1.quartz.core.Quartz;

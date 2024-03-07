@@ -4,6 +4,7 @@ import net.c0ffee1.quartz.core.Quartz;
 import net.c0ffee1.quartz.core.QuartzApplication;
 import net.c0ffee1.quartz.core.config.ConfigManager;
 import net.c0ffee1.quartz.core.config.QuartzConfigManager;
+import net.c0ffee1.quartz.platforms.bukkit.platform.BukkitPlatform;
 
 public interface QuartzBukkitPlugin extends QuartzApplication {
     @SuppressWarnings(value = "unchecked")

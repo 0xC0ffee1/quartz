@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Config {
-    String name();
+    String node();
+    String file();
     String type() default "yaml";
 
     boolean persistent() default true;

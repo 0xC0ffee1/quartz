@@ -6,6 +6,7 @@ import net.c0ffee1.quartz.core.QuartzApplication;
 import net.c0ffee1.quartz.core.annotations.Config;
 import net.c0ffee1.quartz.core.annotations.OnConfigReload;
 import net.c0ffee1.quartz.core.annotations.UsesConfig;
+import net.c0ffee1.quartz.core.config.nodes.ConfigNode;
 import net.c0ffee1.quartz.core.config.parsers.ConfigParser;
 import net.c0ffee1.quartz.core.config.parsers.ParserRegistry;
 import net.c0ffee1.quartz.core.config.parsers.TomlParser;
@@ -22,8 +23,10 @@ import java.util.HashSet;
 
 @Singleton
 public class QuartzConfigManager implements ConfigManager {
-    private final HashMap<Class<?>, Object> configMap = new HashMap<>();
-    private final HashMap<Class<?>, HashSet<Object>> configListeners = new HashMap<>();
+    protected final HashMap<Class<?>, Object> configMap = new HashMap<>();
+    protected final HashMap<Class<?>, HashSet<Object>> configListeners = new HashMap<>();
+
+    protected final HashMap<String, ConfigNode> cache = new HashMap<>();
 
     @Inject
     private QuartzApplication application;
@@ -40,8 +43,8 @@ public class QuartzConfigManager implements ConfigManager {
 
     @Override
     public void reloadAllConfigs() {
+        cache.clear();
         for(Object instance : configMap.values()){
-
             loadConfig(instance);
         }
     }
@@ -69,6 +72,17 @@ public class QuartzConfigManager implements ConfigManager {
         }
     }
 
+    private ConfigNode getTree(ConfigParser parser, Path path, InputStream inputStream){
+        if(cache.containsKey(path.toString())){
+            return cache.get(path.toString());
+        }
+        else{
+            ConfigNode tree = parser.getConfigTree(inputStream);
+            cache.put(path.toString(), tree);
+            return tree;
+        }
+    }
+
     @Override
     public boolean loadConfig(Object config) {
         Config configAnnotation = config.getClass().getAnnotation(Config.class);
@@ -79,9 +93,10 @@ public class QuartzConfigManager implements ConfigManager {
         }
         Path filePath = null;
         for(String ext : parser.getExtensions()){
-            String resourcePath = String.format("config/%s.%s", configAnnotation.name(), ext);
+            String resourcePath = String.format("config/%s.%s", configAnnotation.file(), ext);
             InputStream in = getResource(resourcePath);
             if(in == null) {
+                application.getSlf4jLogger().error("Resource path was null " + resourcePath);
                 continue;
             }
             filePath = application.getDataFolderPath().resolve(resourcePath);
@@ -91,28 +106,40 @@ public class QuartzConfigManager implements ConfigManager {
                     createResource(filePath, in);
                 }
                 else {
-                    parser.loadConfig(in, config);
+
+                    ConfigNode tree = getTree(parser, filePath, in);
+                    cache.put(filePath.toString(), tree);
+                    ConfigNode configNode = tree.path(configAnnotation.node());
+                    parser.loadConfig(configNode, config);
+
                     configMap.put(config.getClass(), config);
                     callListeners(config.getClass());
                     return false;
                 }
             }
+            else break;
         }
+
+
         if(filePath == null){
-            application.getSlf4jLogger().error("Could not load config " + configAnnotation.name());
+            application.getSlf4jLogger().info(application.getDataFolderPath().toString());
+            application.getSlf4jLogger().error("Could not load config " + configAnnotation.node());
             return false;
         }
 
         try (FileInputStream inputStream = new FileInputStream(filePath.toFile())){
-            parser.loadConfig(inputStream, config);
-            application.getSlf4jLogger().debug("Loaded config " + configAnnotation.name() + " into " + config.getClass().getSimpleName());
+            ConfigNode tree = getTree(parser, filePath, inputStream);
+            cache.put(filePath.toString(), tree);
+            ConfigNode configNode = tree.path(configAnnotation.node());
+            parser.loadConfig(configNode, config);
+
+            application.getSlf4jLogger().debug("Loaded config " + configAnnotation.node() + " into " + config.getClass().getSimpleName());
             configMap.put(config.getClass(), config);
             callListeners(config.getClass());
-
             return true;
         }
         catch (IOException e){
-            application.getSlf4jLogger().error("(This is probably a bug) Could not find file " + configAnnotation.name());
+            application.getSlf4jLogger().error("(This is probably a bug) Could not find file " + configAnnotation.node());
             return false;
         }
     }
@@ -134,7 +161,7 @@ public class QuartzConfigManager implements ConfigManager {
 
     private InputStream getResource(String path){
         path = "/"+path;
-        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+        InputStream in = application.getClass().getResourceAsStream(path);
         return in == null ? getClass().getResourceAsStream(path) : in;
     }
 

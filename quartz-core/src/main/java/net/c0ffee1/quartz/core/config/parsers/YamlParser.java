@@ -8,34 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-public class YamlParser implements ConfigParser{
+public class YamlParser extends AbstractJacksonParser{
     protected final ObjectMapper mapper = new YAMLMapper();
     @Override
-    public boolean loadConfig(InputStream inputStream, Object configInstance)  {
-        try {
-            mapper.readerForUpdating(configInstance).readValue(inputStream);
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean writeConfig(Path path, Object configInstance) {
-        try {
-            mapper.writeValue(path.toFile(), configInstance);
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+    public ObjectMapper getMapper() {
+        return mapper;
     }
 
     @Override
     public String[] getExtensions() {
-        return new String[]{"yaml", "yml"};
+        return new String[]{"yml", "yaml"};
     }
 }

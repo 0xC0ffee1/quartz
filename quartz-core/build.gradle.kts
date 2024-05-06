@@ -4,7 +4,6 @@ plugins {
     kotlin("plugin.serialization") version "1.9.22"
     kotlin("jvm") version "1.9.22"
     id("io.freefair.lombok") version "8.6"
-
     `maven-publish`
      application
 }
@@ -20,7 +19,6 @@ publishing   {
             artifactId = "quartz-core"
         }
     }
-
 }
 
 group = "net.c0ffee1"
@@ -37,13 +35,13 @@ repositories {
     maven {
         url = uri("https://jitpack.io")
     }
+
 }
 
 dependencies {
     testImplementation(kotlin("test")) // The Kotlin test library
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-
 
     api("org.jetbrains:annotations:24.0.0")
     api(libs.guice){
@@ -67,6 +65,9 @@ tasks.processResources {
         expand(props)
     }
 }
+
+
+
 kotlin {
     jvmToolchain(17)
 }

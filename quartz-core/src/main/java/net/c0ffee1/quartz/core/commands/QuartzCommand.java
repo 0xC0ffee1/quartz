@@ -18,5 +18,6 @@ public interface QuartzCommand<S> extends Registrable{
 
     List<? extends QuartzCommand<S>> getSubCommands();
 
+
     boolean execute(@NotNull S commandSender, @NotNull String alias, @NotNull String[] args) throws Exception;
 }

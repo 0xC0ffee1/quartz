@@ -1,16 +1,14 @@
 package net.c0ffee1.mock.bukkit;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.inject.Singleton;
 import lombok.Data;
-import lombok.Getter;
 import net.c0ffee1.quartz.core.annotations.Config;
 
 import java.util.Map;
 import java.util.UUID;
 
 @Data
-@Config(name = "test", type = "toml", persistent = false)
+@Config(node = "test", file = "test", type = "toml", persistent = false)
 public class TestConfig {
     private boolean testEnabled;
     private String testString;

@@ -8,6 +8,5 @@ import java.nio.file.Path;
 public interface QuartzApplication {
 
     Path getDataFolderPath();
-    ConfigManager createConfigManager();
     Logger getSlf4jLogger();
 }

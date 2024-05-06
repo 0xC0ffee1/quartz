@@ -9,9 +9,16 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/quartz-api" />
             <option value="$PROJECT_DIR$/quartz-bukkit" />
+            <option value="$PROJECT_DIR$/quartz-bukkit/quartz-bukkit-core" />
+            <option value="$PROJECT_DIR$/quartz-bukkit/quartz-bukkit-holograms" />
+            <option value="$PROJECT_DIR$/quartz-bukkit/quartz-bukkit-protocol" />
             <option value="$PROJECT_DIR$/quartz-core" />
             <option value="$PROJECT_DIR$/quartz-db" />
+            <option value="$PROJECT_DIR$/quartz-db/quartz-db-core" />
+            <option value="$PROJECT_DIR$/quartz-db/quartz-db-exposed" />
+            <option value="$PROJECT_DIR$/quartz-db/quartz-db-jooq" />
             <option value="$PROJECT_DIR$/quartz-test" />
           </set>
         </option>

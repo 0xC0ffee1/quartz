@@ -20,7 +20,7 @@ dependencies {
     implementation libs.reflections
     implementation libs.guice
     implementation project(":quartz-core")
-    implementation project(":quartz-bukkit")
+    implementation project(":quartz-bukkit:quartz-bukkit-core")
 }
 
 test {

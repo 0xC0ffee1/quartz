@@ -1,8 +1,6 @@
 package net.c0ffee1.quartz.core.platform.loaders;
 
-import net.c0ffee1.quartz.core.annotations.Command;
-import net.c0ffee1.quartz.core.annotations.Component;
-import net.c0ffee1.quartz.core.annotations.Service;
+
 import net.c0ffee1.quartz.core.service.ServicePriority;
 import org.reflections.Reflections;
 

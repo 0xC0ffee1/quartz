@@ -1,61 +1,83 @@
 package net.c0ffee1.db.coroutine
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.future.future
-import org.slf4j.LoggerFactory
-import java.util.concurrent.Callable
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.util.UUID
 import kotlin.coroutines.CoroutineContext
+import java.util.concurrent.*
+import java.util.concurrent.locks.ReentrantLock
 
 /**
- * A scheduler designed to run tasks in order asynchronously
+ * A simple scheduler designed to run tasks in order asynchronously using kotlin coroutine channels
  * Useful in Minecraft environments, where database operations must not block the main thread,
  * but still have to be executed in order
  */
-open class FixedScheduler(nThreads : Int) : CoroutineScope {
-    private val isExecutorThread = ThreadLocal.withInitial { false }
 
-    private val executorService = Executors.newFixedThreadPool(nThreads) { runnable ->
-        Thread {
-            isExecutorThread.set(true)
-            try {
-                runnable.run()
-            } finally {
-                isExecutorThread.remove()
+open class FixedScheduler<T : Enum<T>>(nThreads: Int, private val enumClass: Class<T>) : CoroutineScope {
+    private val executorService: ExecutorService = Executors.newFixedThreadPool(nThreads)
+    private val resourceChannels = ConcurrentHashMap<T, Channel<Task<T>>>()
+    private val defaultChannel = Channel<Task<T>>(Channel.UNLIMITED) // Default channel for tasks without specific resources
+    override val coroutineContext: CoroutineContext = executorService.asCoroutineDispatcher()
+    init {
+        init()
+    }
+
+    private fun init(){
+        enumClass.enumConstants.forEach { resource ->
+            val channel = Channel<Task<T>>(Channel.UNLIMITED)
+            resourceChannels[resource] = channel
+            launch {
+                for (task in channel) {
+                    executeTask(task)
+                }
+            }
+        }
+        launch {
+            for (task in defaultChannel) {
+                executeTask(task)
             }
         }
     }
 
-    override val coroutineContext: CoroutineContext = executorService.asCoroutineDispatcher()
+    fun <R> inFuture(callable: Callable<R>, vararg requiredResources: T): CompletableFuture<R> {
+        val future = CompletableFuture<R>()
+        val task = Task({ callable.call() as Any }, requiredResources.toList(), future as CompletableFuture<Any?>)
+        if (requiredResources.isEmpty()) {
+            // Send to default channel if no resources specified
+            launch {
+                defaultChannel.send(task)
+            }
+        } else {
+            // Send to specific resource channels
+            launch {
+                requiredResources.forEach { resource ->
+                    resourceChannels[resource]?.send(task)
+                }
+            }
+        }
+        return future
+    }
 
-    fun shutdown(timeout: Long = 15, unit: TimeUnit = TimeUnit.SECONDS) {
+    private fun executeTask(task: Task<T>) {
+        try {
+            val result = task.callable.call()
+            task.future.complete(result)
+        } catch (e: Exception) {
+            task.future.completeExceptionally(e)
+            println("Task failed with exception: $e")
+        }
+    }
+
+    fun shutdown() {
         coroutineContext.cancel()
         executorService.shutdown()
-        try {
-            if (!executorService.awaitTermination(timeout, unit)) {
-                executorService.shutdownNow()
-                LoggerFactory.getLogger("OrderedDatabaseScheduler").error("Database scheduler did not terminate in specified time!")
-            }
-        } catch (ie: InterruptedException) {
-            executorService.shutdownNow()
-            Thread.currentThread().interrupt()
-        }
+        // Close all channels
+        resourceChannels.values.forEach { it.close() }
     }
+}
 
-    //For Java
-    /**
-     * Run a task wrapped returning its result in completable future in this single threaded context
-     * Ensures that method is not called from the same context, and if it is, calls it directly
-     */
-    fun <T> inFuture(callable: Callable<T>): CompletableFuture<T> {
-        return if (isExecutorThread.get()) {
-            CompletableFuture.completedFuture(callable.call())
-        } else {
-            future {
-                callable.call()
-            }
-        }
-    }
+class Task<T : Enum<T>>(val callable: Callable<Any>, val requiredResources: List<T>, val future: CompletableFuture<Any?>) {
+
 }

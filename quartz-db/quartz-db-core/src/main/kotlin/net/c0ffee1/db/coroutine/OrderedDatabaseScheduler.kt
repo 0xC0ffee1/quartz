@@ -19,5 +19,5 @@ import kotlin.coroutines.CoroutineContext
 //Left for compability purposes
 
 @Deprecated("Use FixedScheduler(1)")
-class OrderedDatabaseScheduler : FixedScheduler(1) {
+class OrderedDatabaseScheduler<T : Enum<T>> (enumClass: Class<T>) : FixedScheduler<T>( 1, enumClass) {
 }

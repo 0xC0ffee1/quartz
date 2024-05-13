@@ -35,6 +35,9 @@ dependencies {
     api("com.zaxxer:HikariCP:5.1.0")
 
     implementation(project(":quartz-core"))
+
+    testImplementation("org.openjdk.jmh:jmh-core:1.33")
+    testAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:1.33")
 }
 
 tasks.test {

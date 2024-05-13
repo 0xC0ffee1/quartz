@@ -3,6 +3,7 @@ package net.c0ffee1.quartz.platforms.bukkit.config;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.enchantments.Enchantment;
 
 public class BukkitYAMLMapper extends YAMLMapper {
     public BukkitYAMLMapper() {

@@ -72,8 +72,12 @@ public abstract class CommonPlatformModule<P extends QuartzApplication> extends 
         bind(ConfigManager.class).to(bindings.configManager());
         bind(ServiceManager.class).to(bindings.serviceManager());
 
-        //@TODO causes binded classes annotated with @RegisterEvents to fire twice
-        Quartz.getBindings().forEach((k,v) -> bind((Class) k).toInstance(v));
+
+        Quartz.getBindings().forEach((k,v) -> {
+            TypeLiteral<Object> typeLiteral = (TypeLiteral<Object>) TypeLiteral.get(k);
+            bind(typeLiteral).toInstance(v);
+            LoggerFactory.getLogger(CommonPlatformModule.class).info("BINDING " + k.getSimpleName());
+        });
 
         ServiceProvisionListener serviceListener = new ServiceProvisionListener(getProvider(ServiceManager.class),
                 getServiceAnnotations());

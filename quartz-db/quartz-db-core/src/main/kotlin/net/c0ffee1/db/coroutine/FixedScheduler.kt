@@ -2,12 +2,9 @@ package net.c0ffee1.db.coroutine
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 import java.util.concurrent.*
-import java.util.concurrent.locks.ReentrantLock
+
 
 /**
  * A simple scheduler designed to run tasks in order asynchronously using kotlin coroutine channels

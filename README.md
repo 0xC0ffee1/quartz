@@ -61,3 +61,6 @@ That will load the map from a toml config defined like this:
 some_key="hello"
 other_key="world"
 ```
+#### Generic Dependency Injection
+Quartz uses Guice under the hood.
+Refer to its documentation here: https://github.com/google/guice/wiki/GettingStarted
